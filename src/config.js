@@ -37,6 +37,10 @@ const config = {
       : path.join(process.cwd(), 'data', 'bot.sqlite')
   },
 
+  server: {
+    port: numberFromEnv('PORT', 8080, 1, 65535)
+  },
+
   bot: {
     defaultAiEnabled: boolFromEnv('AI_ENABLED', true),
     replyChance: numberFromEnv('REPLY_CHANCE', 0.15, 0, 1),

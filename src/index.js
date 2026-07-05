@@ -7,6 +7,7 @@ const {
 
 const config = require('./config');
 const logger = require('./utils/logger');
+const { startHealthServer } = require('./utils/healthServer');
 require('./database/connection');
 
 const readyEvent = require('./events/ready');
@@ -31,6 +32,8 @@ const client = new Client({
   ],
   partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
+
+startHealthServer(client);
 
 client.once(Events.ClientReady, (readyClient) => {
   readyEvent.execute(readyClient).catch((error) => {

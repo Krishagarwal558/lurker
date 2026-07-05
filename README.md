@@ -103,6 +103,7 @@ npm run dev
 | `COMMAND_PREFIX` | No | `!` | Prefix for commands |
 | `DATABASE_PATH` | No | `./data/bot.sqlite` | SQLite database path |
 | `LOG_LEVEL` | No | `info` | `debug`, `info`, `warn`, or `error` |
+| `PORT` | No | `8080` | Health check HTTP port for container hosts |
 | `REPLY_CHANCE` | No | `0.15` | Ambient reply chance |
 | `KEYWORD_REPLY_CHANCE` | No | `0.35` | Keyword reply chance |
 | `CHANNEL_COOLDOWN_SECONDS` | No | `60` | Channel cooldown |
@@ -235,6 +236,17 @@ pm2 save
 ```
 
 Keep the SQLite database on persistent storage for hosted deployments.
+
+Back4app settings:
+
+```text
+Branch: main
+Root Directory: ./
+Port: 8080
+Autodeploy: Yes
+```
+
+The bot exposes `/health` on port `8080` for container health checks.
 
 ## Notes
 
