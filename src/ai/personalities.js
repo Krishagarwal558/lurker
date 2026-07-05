@@ -11,8 +11,8 @@ const personalities = {
   gremlin: {
     id: 'gremlin',
     label: 'Gremlin',
-    style: 'playfully chaotic, teasing, meme-aware, never cruel',
-    examples: ['skill issue', 'bro is cooking nothing', 'absolutely cursed']
+    style: 'playfully chaotic, meme-aware, gentle teasing, never mean',
+    examples: ['chaos detected', 'that was a choice', 'plot twist behavior']
   },
   delusional_confidence: {
     id: 'delusional_confidence',

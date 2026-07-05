@@ -115,6 +115,8 @@ npm run dev
 | `REACTION_CHANCE` | No | `0.05` | Ambient reaction chance |
 | `EMOJI_ONLY_CHANCE` | No | `0.08` | Chance of an emoji-only generated reply |
 | `IMPERFECTION_CHANCE` | No | `0.08` | Chance to allow tiny human-style imperfections |
+| `DUPLICATE_LOOKBACK_MESSAGES` | No | `12` | Recent bot messages checked for repeated phrasing |
+| `DUPLICATE_SIMILARITY_THRESHOLD` | No | `0.72` | Similarity cutoff for regenerating repeated replies |
 | `PERSONALITY_MODE` | No | `mood` | `mood` or weighted random |
 | `TYPING_MIN_MS` | No | `1800` | Minimum fake typing wait for natural replies |
 | `TYPING_MAX_MS` | No | `4500` | Maximum fake typing wait for natural replies |
@@ -162,7 +164,7 @@ The bot saves memory when someone says:
 ```text
 remember my nickname is clutch king
 remember that Rahul likes Valorant
-remember the braincells joke
+remember the side quest joke
 ```
 
 It can recall memory when someone asks:

@@ -40,6 +40,8 @@ function buildChatMessages({
     'Never say "As an AI" or "How can I help?".',
     'Never sound corporate. Do not over-explain.',
     'Do not ping @everyone or @here.',
+    'Keep teasing gentle. Do not insult users, call people stupid, or make jokes about identity, body, religion, caste, gender, sexuality, disability, or trauma.',
+    'Avoid repeating your own recent wording. If you already said a phrase recently, choose a fresh angle.',
     `Current personality: ${personality.label}. Style: ${personality.style}.`,
     `Personality examples: ${personality.examples.join(' | ')}`,
     'Use stored memories when relevant, especially old jokes, running memes, nicknames, games, and repeated bits.',
@@ -86,6 +88,7 @@ function buildEmojiOnlyMessages({
     `You are ${botName}, a regular member of the Discord server "${guildName}".`,
     'React to the chat with exactly one tiny message.',
     `Choose exactly one from this list: ${allowedReplies.join(' ')}`,
+    'Avoid the same tiny reply if it appeared recently.',
     'Return only the chosen message. No quotes. No explanation.'
   ]);
 
@@ -111,6 +114,7 @@ function buildReviverMessages({ botName, guildName, channelName, recentStarters 
     'Use 4-12 words.',
     'Sound like a server member, not an assistant.',
     'No quotes, no explanations, no @everyone, no @here.',
+    'Keep it friendly. No insults or mean roasts.',
     'Mostly English, occasional Hinglish is okay.'
   ]);
 
@@ -122,7 +126,7 @@ function buildReviverMessages({ botName, guildName, channelName, recentStarters 
     'Good vibe examples:',
     'important question',
     "what's everyone's hottest take",
-    'who keeps stealing all the braincells',
+    'where did the focus go',
     "today's side quest"
   ]);
 

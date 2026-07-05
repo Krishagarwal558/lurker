@@ -6,7 +6,7 @@ function classifyMemory(text) {
 
   if (/(call me|nickname|aka|my name is|naam|naam hai)/i.test(lower)) return 'nickname';
   if (/(inside joke|joke between us|server joke)/i.test(lower)) return 'inside_joke';
-  if (/(meme|running bit|braincells|side quest|lore)/i.test(lower)) return 'running_meme';
+  if (/(meme|running bit|side quest|lore)/i.test(lower)) return 'running_meme';
   if (/(favorite|favourite|fav).*(game|valorant|minecraft)|\b(valorant|minecraft)\b/i.test(lower)) {
     return 'favorite_game';
   }

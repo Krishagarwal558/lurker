@@ -51,6 +51,8 @@ const config = {
     reactionChance: numberFromEnv('REACTION_CHANCE', 0.05, 0, 1),
     emojiOnlyChance: numberFromEnv('EMOJI_ONLY_CHANCE', 0.08, 0, 1),
     imperfectionChance: numberFromEnv('IMPERFECTION_CHANCE', 0.08, 0, 1),
+    duplicateLookbackMessages: numberFromEnv('DUPLICATE_LOOKBACK_MESSAGES', 12, 3, 50),
+    duplicateSimilarityThreshold: numberFromEnv('DUPLICATE_SIMILARITY_THRESHOLD', 0.72, 0.4, 1),
     maxReplyLength: numberFromEnv('MAX_REPLY_LENGTH', 240, 40, 2000),
     typingMinMs: numberFromEnv('TYPING_MIN_MS', 1800, 0, 10000),
     typingMaxMs: numberFromEnv('TYPING_MAX_MS', 4500, 500, 15000),
@@ -113,12 +115,22 @@ const config = {
     reviverFallbackStarters: [
       'important question',
       "what's everyone's hottest take",
-      'who keeps stealing all the braincells',
+      'where did the focus go',
       "today's side quest",
       'drop the most random thought rn',
       'what are we pretending to understand today',
       'tiny debate: best midnight snack?',
       'who is winning the sleep schedule war'
+    ],
+
+    freshFallbackReplies: [
+      'real tbh',
+      'valid honestly',
+      'okay wait, plot twist',
+      'chat is entering lore mode',
+      'fair enough',
+      'that checks out somehow',
+      'i respect the chaos'
     ]
   }
 };
