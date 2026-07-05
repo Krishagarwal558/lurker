@@ -1,0 +1,14 @@
+node_modules/
+.env
+.git/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+data/
+logs/
+bot.log
+bot.err.log
+.agents/
+.codex/
+work/
+outputs/
