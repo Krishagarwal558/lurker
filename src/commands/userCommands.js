@@ -174,7 +174,8 @@ const help = {
       '`!cooldown channel 60`',
       '`!cooldown user 25`',
       '`!blacklist add|remove|list #channel`',
-      '`!whitelist add|remove|clear|list #channel`'
+      '`!whitelist add|remove|clear|list #channel`',
+      '`!gremlin @user|off|status`'
     ].join('\n'));
   }
 };

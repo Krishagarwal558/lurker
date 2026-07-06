@@ -15,12 +15,13 @@ async function safeReply(message, content) {
   }
 }
 
-async function safeSend(channel, content) {
+async function safeSend(channel, content, allowedUserIds = []) {
   try {
     return await channel.send({
       content,
       allowedMentions: {
-        parse: []
+        parse: [],
+        users: allowedUserIds
       }
     });
   } catch (error) {

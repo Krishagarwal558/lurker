@@ -3,6 +3,7 @@ const groqClient = require('./groqClient');
 const {
   buildChatMessages,
   buildEmojiOnlyMessages,
+  buildGremlinMessages,
   buildReviverMessages
 } = require('./promptBuilder');
 const { choosePersonality } = require('./personalities');
@@ -100,8 +101,27 @@ async function generateReviverStarter(input) {
   return pick(fresh.length ? fresh : config.bot.reviverFallbackStarters);
 }
 
+async function generateGremlinReply(input) {
+  const messages = buildGremlinMessages(input);
+
+  try {
+    const raw = await groqClient.chat(messages, {
+      maxTokens: 50,
+      temperature: 1.05
+    });
+    const content = sanitizeAiOutput(raw, 160);
+
+    return isTooSimilarToRecentBotReply(content, input.recentMessages || [])
+      ? input.fallback
+      : content;
+  } catch (error) {
+    return input.fallback;
+  }
+}
+
 module.exports = {
   generateEmojiOnlyReply,
   generateChatReply,
+  generateGremlinReply,
   generateReviverStarter
 };

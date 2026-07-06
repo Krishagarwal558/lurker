@@ -18,6 +18,7 @@ const config = {
   discord: {
     token: process.env.DISCORD_TOKEN || '',
     clientId: process.env.DISCORD_CLIENT_ID || '',
+    ownerId: process.env.OWNER_ID || '',
     prefix: process.env.COMMAND_PREFIX || '!'
   },
 
@@ -53,6 +54,7 @@ const config = {
     imperfectionChance: numberFromEnv('IMPERFECTION_CHANCE', 0.08, 0, 1),
     duplicateLookbackMessages: numberFromEnv('DUPLICATE_LOOKBACK_MESSAGES', 12, 3, 50),
     duplicateSimilarityThreshold: numberFromEnv('DUPLICATE_SIMILARITY_THRESHOLD', 0.72, 0.4, 1),
+    replyTimeoutMs: numberFromEnv('REPLY_TIMEOUT_MS', 10000, 2000, 60000),
     maxReplyLength: numberFromEnv('MAX_REPLY_LENGTH', 240, 40, 2000),
     typingMinMs: numberFromEnv('TYPING_MIN_MS', 1800, 0, 10000),
     typingMaxMs: numberFromEnv('TYPING_MAX_MS', 4500, 500, 15000),
@@ -64,6 +66,29 @@ const config = {
     decisionScoreThreshold: numberFromEnv('DECISION_SCORE_THRESHOLD', 35, 0, 100),
     activeConversationUsers: numberFromEnv('ACTIVE_CONVERSATION_USERS', 3, 2, 20),
     fomoMessageCount: numberFromEnv('FOMO_MESSAGE_COUNT', 60, 5, 500),
+
+    enableHotTakes: boolFromEnv('ENABLE_HOT_TAKES', true),
+    hotTakeProbability: numberFromEnv('HOT_TAKE_PROBABILITY', 45, 0, 100),
+    argumentReplyChance: numberFromEnv('ARGUMENT_REPLY_CHANCE', 65, 0, 100),
+    argumentDurationMinutes: numberFromEnv('ARGUMENT_DURATION_MINUTES', 15, 1, 120),
+    minimumMessagesBetweenHotTakes: numberFromEnv('MINIMUM_MESSAGES_BETWEEN_HOT_TAKES', 35, 1, 500),
+    minimumMinutesBetweenHotTakes: numberFromEnv('MINIMUM_MINUTES_BETWEEN_HOT_TAKES', 180, 1, 10080),
+    hotTakeActiveRecentMinutes: numberFromEnv('HOT_TAKE_ACTIVE_RECENT_MINUTES', 8, 1, 60),
+    hotTakeMinimumRecentMessages: numberFromEnv('HOT_TAKE_MINIMUM_RECENT_MESSAGES', 6, 1, 50),
+    hotTakeAgreementSwitchCount: numberFromEnv('HOT_TAKE_AGREEMENT_SWITCH_COUNT', 2, 1, 10),
+
+    enableTargetGremlin: boolFromEnv('ENABLE_TARGET_GREMLIN', true),
+    targetUserId: process.env.TARGET_USER_ID || '',
+    checkIntervalMinutes: numberFromEnv('CHECK_INTERVAL_MINUTES', 20, 1, 1440),
+    baseTriggerChance: numberFromEnv('BASE_TRIGGER_CHANCE', 0.45, 0, 1),
+    onlineTriggerChance: numberFromEnv('ONLINE_TRIGGER_CHANCE', 0.65, 0, 1),
+    recentMessageTriggerChance: numberFromEnv('RECENT_MESSAGE_TRIGGER_CHANCE', 0.90, 0, 1),
+    mentionChance: numberFromEnv('MENTION_CHANCE', 0.25, 0, 1),
+    replyChanceDuringGremlin: numberFromEnv('REPLY_CHANCE_DURING_GREMLIN', 0.70, 0, 1),
+    gremlinArgumentReplyChance: numberFromEnv('GREMLIN_ARGUMENT_REPLY_CHANCE', 0.90, 0, 1),
+    defenderReplyChance: numberFromEnv('DEFENDER_REPLY_CHANCE', 0.25, 0, 1),
+    maxDailyRoasts: numberFromEnv('MAX_DAILY_ROASTS', 10, 0, 100),
+    maxMentionsPerDay: numberFromEnv('MAX_MENTIONS_PER_DAY', 2, 0, 20),
 
     decisionScores: {
       keyword: 20,

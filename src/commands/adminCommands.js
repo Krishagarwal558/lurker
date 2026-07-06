@@ -1,5 +1,6 @@
 const { PermissionFlagsBits } = require('discord.js');
 
+const config = require('../config');
 const repositories = require('../database/repositories');
 const { safeReply } = require('../utils/discord');
 const { parseChanceInput, percent } = require('../utils/text');
@@ -10,8 +11,26 @@ function isAdmin(member) {
     member.permissions.has(PermissionFlagsBits.ManageGuild);
 }
 
+function isOwner(userId) {
+  return Boolean(config.discord.ownerId && userId === config.discord.ownerId);
+}
+
+function isAdministrator(member) {
+  return Boolean(member?.permissions.has(PermissionFlagsBits.Administrator));
+}
+
+function isOwnerOrAdmin(message) {
+  return isOwner(message.author.id) || isAdministrator(message.member);
+}
+
 async function requireAdmin(message) {
   if (isAdmin(message.member)) return true;
+  await safeReply(message, 'you need Manage Server for that');
+  return false;
+}
+
+async function requireOwnerOrAdmin(message) {
+  if (isOwnerOrAdmin(message)) return true;
   await safeReply(message, 'you need Manage Server for that');
   return false;
 }
@@ -169,7 +188,53 @@ const whitelist = {
   }
 };
 
+const gremlin = {
+  name: 'gremlin',
+  aliases: ['targetgremlin'],
+  description: 'Set or disable the secret rivalry target.',
+  async execute({ message, args }) {
+    if (!(await requireOwnerOrAdmin(message))) return;
+
+    const action = args[0]?.toLowerCase();
+    if (!action || action === 'status') {
+      const settings = repositories.getTargetGremlinSettings(message.guild.id);
+      const daily = repositories.getTargetGremlinDaily(message.guild.id);
+      const target = settings.target_user_id ? `<@${settings.target_user_id}>` : 'none';
+      const nextCheck = settings.next_check_at
+        ? `<t:${Math.floor(settings.next_check_at / 1000)}:R>`
+        : 'not scheduled';
+
+      await safeReply(message, [
+        `current target: ${target}`,
+        `mode: ${settings.enabled && settings.target_user_id ? 'on' : 'off'}`,
+        `today's roast count: ${daily.roast_count}/${config.bot.maxDailyRoasts}`,
+        `mentions used: ${daily.mention_count}/${config.bot.maxMentionsPerDay}`,
+        `next check: ${nextCheck}`
+      ].join('\n'));
+      return;
+    }
+
+    if (['off', 'disable', 'disabled', 'stop'].includes(action)) {
+      repositories.disableTargetGremlin(message.guild.id);
+      await safeReply(message, 'gremlin mode is off');
+      return;
+    }
+
+    const target = message.mentions.users.find((user) => !user.bot);
+    const rawId = target?.id || args[0]?.replace(/[<@!>]/g, '');
+    if (!/^\d{15,25}$/.test(rawId || '')) {
+      await safeReply(message, 'use `!gremlin @user`, `!gremlin off`, or `!gremlin status`');
+      return;
+    }
+
+    repositories.setTargetGremlinTarget(message.guild.id, rawId);
+    await safeReply(message, `noted. ${target ? target.username : rawId} is now suspicious.`);
+  }
+};
+
 module.exports = {
-  adminCommands: [ai, replyChance, cooldown, blacklist, whitelist],
-  isAdmin
+  adminCommands: [ai, replyChance, cooldown, blacklist, whitelist, gremlin],
+  isAdmin,
+  isOwner,
+  isOwnerOrAdmin
 };

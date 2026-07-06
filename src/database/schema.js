@@ -103,6 +103,70 @@ function initializeSchema(db) {
       created_at INTEGER NOT NULL
     );
 
+    CREATE TABLE IF NOT EXISTS used_hot_takes (
+      guild_id TEXT NOT NULL,
+      topic TEXT NOT NULL,
+      used_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, topic)
+    );
+
+    CREATE TABLE IF NOT EXISTS hot_take_openers (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      guild_id TEXT NOT NULL,
+      opener TEXT NOT NULL,
+      used_at INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS hot_take_channels (
+      guild_id TEXT NOT NULL,
+      channel_id TEXT NOT NULL,
+      messages_since_hot_take INTEGER NOT NULL DEFAULT 0,
+      last_hot_take_at INTEGER,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, channel_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS active_hot_takes (
+      guild_id TEXT NOT NULL,
+      channel_id TEXT NOT NULL,
+      topic TEXT NOT NULL,
+      stance TEXT NOT NULL,
+      opener TEXT NOT NULL,
+      active_until INTEGER NOT NULL,
+      started_at INTEGER NOT NULL,
+      last_activity_at INTEGER NOT NULL,
+      agreement_count INTEGER NOT NULL DEFAULT 0,
+      switched_sides INTEGER NOT NULL DEFAULT 0,
+      PRIMARY KEY (guild_id, channel_id)
+    );
+
+    CREATE TABLE IF NOT EXISTS target_gremlin_settings (
+      guild_id TEXT PRIMARY KEY,
+      enabled INTEGER NOT NULL DEFAULT 1,
+      target_user_id TEXT,
+      next_check_at INTEGER,
+      created_at INTEGER NOT NULL,
+      updated_at INTEGER NOT NULL
+    );
+
+    CREATE TABLE IF NOT EXISTS target_gremlin_daily (
+      guild_id TEXT NOT NULL,
+      day TEXT NOT NULL,
+      roast_count INTEGER NOT NULL DEFAULT 0,
+      mention_count INTEGER NOT NULL DEFAULT 0,
+      updated_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, day)
+    );
+
+    CREATE TABLE IF NOT EXISTS target_gremlin_used_templates (
+      guild_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      template_key TEXT NOT NULL,
+      used_at INTEGER NOT NULL,
+      PRIMARY KEY (guild_id, type, template_key)
+    );
+
     CREATE INDEX IF NOT EXISTS idx_memories_guild_user
       ON memories (guild_id, user_id, type, created_at);
 
@@ -111,6 +175,15 @@ function initializeSchema(db) {
 
     CREATE INDEX IF NOT EXISTS idx_reviver_starters_channel
       ON reviver_starters (guild_id, channel_id, created_at);
+
+    CREATE INDEX IF NOT EXISTS idx_hot_take_openers
+      ON hot_take_openers (guild_id, used_at);
+
+    CREATE INDEX IF NOT EXISTS idx_active_hot_takes
+      ON active_hot_takes (guild_id, channel_id, active_until);
+
+    CREATE INDEX IF NOT EXISTS idx_target_gremlin_templates
+      ON target_gremlin_used_templates (guild_id, type, used_at);
   `);
 }
 

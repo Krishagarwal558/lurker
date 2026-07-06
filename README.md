@@ -35,7 +35,8 @@ The bot behaves like another server member: it listens to every non-bot message,
 3. Go to **Bot** and create a bot.
 4. Copy the bot token into `.env`.
 5. Enable **Message Content Intent** under privileged gateway intents.
-6. Invite the bot with these permissions:
+6. Enable **Presence Intent** if you want Target Gremlin background checks to know when the target is online.
+7. Invite the bot with these permissions:
    - View Channels
    - Send Messages
    - Read Message History
@@ -99,6 +100,7 @@ npm run dev
 | `DISCORD_TOKEN` | Yes |  | Discord bot token |
 | `GROQ_API_KEY` | Yes |  | Groq API key |
 | `DISCORD_CLIENT_ID` | No |  | Discord application client ID |
+| `OWNER_ID` | No |  | Discord user ID allowed to run owner-only admin commands |
 | `GROQ_MODEL` | No | `llama-3.3-70b-versatile` | Groq model |
 | `COMMAND_PREFIX` | No | `!` | Prefix for commands |
 | `DATABASE_PATH` | No | `./data/bot.sqlite` | SQLite database path |
@@ -112,11 +114,31 @@ npm run dev
 | `DECISION_SCORE_THRESHOLD` | No | `35` | Base score needed for ambient replies |
 | `ACTIVE_CONVERSATION_USERS` | No | `3` | Distinct recent users that count as active chat |
 | `FOMO_MESSAGE_COUNT` | No | `60` | Messages since bot last spoke before FOMO boost |
+| `ENABLE_HOT_TAKES` | No | `true` | Enable autonomous hot takes |
+| `HOT_TAKE_PROBABILITY` | No | `45` | Chance to start a hot take after requirements are met |
+| `ARGUMENT_REPLY_CHANCE` | No | `65` | Reply chance during related argument mode |
+| `ARGUMENT_DURATION_MINUTES` | No | `15` | Argument mode duration |
+| `MINIMUM_MESSAGES_BETWEEN_HOT_TAKES` | No | `35` | Messages required before another hot take |
+| `MINIMUM_MINUTES_BETWEEN_HOT_TAKES` | No | `180` | Cooldown between hot takes |
+| `HOT_TAKE_ACTIVE_RECENT_MINUTES` | No | `8` | Recent activity window required for hot takes |
+| `HOT_TAKE_MINIMUM_RECENT_MESSAGES` | No | `6` | Recent human messages required before hot takes |
+| `HOT_TAKE_AGREEMENT_SWITCH_COUNT` | No | `2` | Agreement count before the bot flips sides |
+| `ENABLE_TARGET_GREMLIN` | No | `true` | Enable Target Gremlin Mode |
+| `TARGET_USER_ID` | No |  | Optional default Gremlin target user ID |
+| `CHECK_INTERVAL_MINUTES` | No | `20` | Background Gremlin check interval |
+| `BASE_TRIGGER_CHANCE` | No | `0.45` | Background chance for weaker presence/recent signals |
+| `ONLINE_TRIGGER_CHANCE` | No | `0.65` | Background chance when target is online |
+| `RECENT_MESSAGE_TRIGGER_CHANCE` | No | `0.90` | Background chance when target spoke recently |
+| `MENTION_CHANCE` | No | `0.25` | Chance to respond when someone mentions the target |
+| `REPLY_CHANCE_DURING_GREMLIN` | No | `0.70` | Chance to roast when the target speaks |
+| `MAX_DAILY_ROASTS` | No | `10` | Daily Gremlin roast cap |
+| `MAX_MENTIONS_PER_DAY` | No | `2` | Daily target ping cap |
 | `REACTION_CHANCE` | No | `0.05` | Ambient reaction chance |
 | `EMOJI_ONLY_CHANCE` | No | `0.08` | Chance of an emoji-only generated reply |
 | `IMPERFECTION_CHANCE` | No | `0.08` | Chance to allow tiny human-style imperfections |
 | `DUPLICATE_LOOKBACK_MESSAGES` | No | `12` | Recent bot messages checked for repeated phrasing |
 | `DUPLICATE_SIMILARITY_THRESHOLD` | No | `0.72` | Similarity cutoff for regenerating repeated replies |
+| `REPLY_TIMEOUT_MS` | No | `10000` | Max time to wait for Groq before falling back |
 | `PERSONALITY_MODE` | No | `mood` | `mood` or weighted random |
 | `TYPING_MIN_MS` | No | `1800` | Minimum fake typing wait for natural replies |
 | `TYPING_MAX_MS` | No | `4500` | Maximum fake typing wait for natural replies |
@@ -153,6 +175,9 @@ Admin commands require **Manage Server** or **Administrator**:
 !whitelist remove #channel
 !whitelist clear
 !whitelist list
+!gremlin @user
+!gremlin off
+!gremlin status
 ```
 
 `!enableai` and `!disableai` are also supported.
@@ -194,6 +219,26 @@ Default scoring:
 ```
 
 The default threshold is `35`. `REPLY_CHANCE` still works as a sensitivity nudge: higher values lower the score needed, lower values raise it.
+
+## Hot Takes
+
+Hot Takes are autonomous debate starters stored in `hot_takes.json`.
+
+They only trigger when the server has been active recently, enough messages have passed since the last hot take, and the hot take cooldown has expired. Topics are stored in SQLite after use, so the same topic is not reused until the full topic pool has been exhausted.
+
+After a hot take starts, the bot enters Argument Mode for about 10-20 minutes. During that window it replies more often to related messages, defends its current stance, keeps replies short, and can flip sides if everyone agrees too quickly.
+
+## Target Gremlin
+
+Target Gremlin Mode gives the bot one configured rivalry target per server. It is controlled only by Administrators or `OWNER_ID`.
+
+```text
+!gremlin @user
+!gremlin off
+!gremlin status
+```
+
+The bot never announces this as a feature in chat. It uses daily caps for roasts and mentions, avoids sensitive insult categories, and rotates templates so the same joke does not repeat too often.
 
 ## Configuration
 
