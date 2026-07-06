@@ -78,6 +78,7 @@ const config = {
     hotTakeAgreementSwitchCount: numberFromEnv('HOT_TAKE_AGREEMENT_SWITCH_COUNT', 2, 1, 10),
 
     enableTargetGremlin: boolFromEnv('ENABLE_TARGET_GREMLIN', true),
+    enablePresenceIntent: boolFromEnv('ENABLE_PRESENCE_INTENT', false),
     targetUserId: process.env.TARGET_USER_ID || '',
     checkIntervalMinutes: numberFromEnv('CHECK_INTERVAL_MINUTES', 20, 1, 1440),
     baseTriggerChance: numberFromEnv('BASE_TRIGGER_CHANCE', 0.45, 0, 1),

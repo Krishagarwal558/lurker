@@ -39,6 +39,12 @@ function triggerChanceFor(member, lastTargetMessage) {
     now - lastTargetMessage.created_at <= 10 * 60 * 1000;
 
   if (recentlySpoke) return config.bot.recentMessageTriggerChance;
+  if (!config.bot.enablePresenceIntent) {
+    const somewhatRecent = lastTargetMessage &&
+      now - lastTargetMessage.created_at <= 30 * 60 * 1000;
+
+    return somewhatRecent ? config.bot.baseTriggerChance : 0;
+  }
 
   const status = member.presence?.status;
   if (status === 'offline') return 0;
@@ -162,7 +168,10 @@ function startTargetGremlinWatcher(client) {
     });
   }, intervalMs);
 
-  logger.info(`Target Gremlin scheduled every ${config.bot.checkIntervalMinutes} minute(s).`);
+  const presenceNote = config.bot.enablePresenceIntent
+    ? 'with presence checks'
+    : 'using recent chat activity only';
+  logger.info(`Target Gremlin scheduled every ${config.bot.checkIntervalMinutes} minute(s), ${presenceNote}.`);
 }
 
 module.exports = {

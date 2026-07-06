@@ -35,7 +35,7 @@ The bot behaves like another server member: it listens to every non-bot message,
 3. Go to **Bot** and create a bot.
 4. Copy the bot token into `.env`.
 5. Enable **Message Content Intent** under privileged gateway intents.
-6. Enable **Presence Intent** if you want Target Gremlin background checks to know when the target is online.
+6. Optional: enable **Presence Intent** and set `ENABLE_PRESENCE_INTENT=true` if you want Target Gremlin background checks to know when the target is online.
 7. Invite the bot with these permissions:
    - View Channels
    - Send Messages
@@ -124,6 +124,7 @@ npm run dev
 | `HOT_TAKE_MINIMUM_RECENT_MESSAGES` | No | `6` | Recent human messages required before hot takes |
 | `HOT_TAKE_AGREEMENT_SWITCH_COUNT` | No | `2` | Agreement count before the bot flips sides |
 | `ENABLE_TARGET_GREMLIN` | No | `true` | Enable Target Gremlin Mode |
+| `ENABLE_PRESENCE_INTENT` | No | `false` | Enable online-status checks for Target Gremlin background roasts |
 | `TARGET_USER_ID` | No |  | Optional default Gremlin target user ID |
 | `CHECK_INTERVAL_MINUTES` | No | `20` | Background Gremlin check interval |
 | `BASE_TRIGGER_CHANCE` | No | `0.45` | Background chance for weaker presence/recent signals |
