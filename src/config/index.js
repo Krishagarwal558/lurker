@@ -34,7 +34,7 @@ const config = {
       apiKey: process.env.GROQ_API_KEY || '',
       baseUrl: process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1',
       model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
-      timeoutMs: numberFromEnv('GROQ_TIMEOUT_MS', 12000, 2000, 60000),
+      timeoutMs: numberFromEnv('GROQ_TIMEOUT_MS', 20000, 2000, 60000),
       maxTokens: numberFromEnv('GROQ_MAX_TOKENS', 90, 20, 500),
       temperature: numberFromEnv('GROQ_TEMPERATURE', 0.95, 0, 2),
       maxRetries: numberFromEnv('GROQ_MAX_RETRIES', 2, 0, 5)
@@ -79,7 +79,7 @@ const config = {
     imperfectionChance: numberFromEnv('IMPERFECTION_CHANCE', 0.08, 0, 1),
     duplicateLookbackMessages: numberFromEnv('DUPLICATE_LOOKBACK_MESSAGES', 12, 3, 50),
     duplicateSimilarityThreshold: numberFromEnv('DUPLICATE_SIMILARITY_THRESHOLD', 0.72, 0.4, 1),
-    replyTimeoutMs: numberFromEnv('REPLY_TIMEOUT_MS', 10000, 2000, 60000),
+    replyTimeoutMs: numberFromEnv('REPLY_TIMEOUT_MS', 25000, 2000, 60000),
     maxReplyLength: numberFromEnv('MAX_REPLY_LENGTH', 260, 40, 2000),
     typingMinMs: numberFromEnv('TYPING_MIN_MS', 1800, 0, 10000),
     typingMaxMs: numberFromEnv('TYPING_MAX_MS', 4500, 500, 15000),

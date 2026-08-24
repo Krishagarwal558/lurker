@@ -90,7 +90,7 @@ function buildChatMessages({
     'Recent channel context:',
     formatRecentMessages(recentMessages),
     '',
-    `Current message: ${currentMessage || '(empty ping)'}`
+    `Current message: ${currentMessage || '(User pinged you with an empty mention to say hi or get your attention. Reply casually, e.g. "yo?", "sup", "what\'s good")'}`
   ]);
 
   return [

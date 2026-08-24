@@ -77,7 +77,7 @@ function displayName(message) {
 function fallbackReplyContent({ memorySaved, memoryAsked }) {
   if (memorySaved) return 'bet, remembered';
   if (memoryAsked) return 'my brain lagged, ask again';
-  return 'wait my brain froze, say that again';
+  return pick(['yo?', "what's good", 'sup', 'wait what', 'my ping is 999 rn, say that again', 'huh?']);
 }
 
 function recordBotReplyMessage({ message, sent, content, personality }) {
