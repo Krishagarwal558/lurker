@@ -25,10 +25,24 @@ async function fetchLiveGroqModels(baseUrl, apiKey) {
         .map((m) => m.id)
         .filter((id) => id && !id.includes('whisper') && !id.includes('guard') && !id.includes('tts') && !id.includes('embedding'));
       if (models.length) {
-        discoveredModelsCache = models;
+        // Prioritize fast conversational models over heavy reasoning models
+        const sortedModels = models.sort((a, b) => {
+          const score = (name) => {
+            if (name.includes('llama-3.3-70b')) return 100;
+            if (name.includes('llama-3.1-8b')) return 90;
+            if (name.includes('llama-3.2-3b')) return 80;
+            if (name.includes('llama-3.2-1b')) return 70;
+            if (name.includes('qwen-2.5')) return 60;
+            if (name.includes('deepseek-r1') || name.includes('qwq')) return 10;
+            return 50;
+          };
+          return score(b) - score(a);
+        });
+
+        discoveredModelsCache = sortedModels;
         lastDiscoveryTime = now;
-        logger.info(`Discovered ${models.length} active Groq models: ${models.slice(0, 6).join(', ')}`);
-        return models;
+        logger.info(`Discovered ${sortedModels.length} active Groq models: ${sortedModels.slice(0, 6).join(', ')}`);
+        return sortedModels;
       }
     }
   } catch (err) {
@@ -38,9 +52,9 @@ async function fetchLiveGroqModels(baseUrl, apiKey) {
   return [
     'llama-3.3-70b-versatile',
     'llama-3.1-8b-instant',
-    'deepseek-r1-distill-llama-70b',
     'llama-3.2-3b-preview',
     'llama-3.2-1b-preview',
+    'deepseek-r1-distill-llama-70b',
     'qwen-qwq-32b'
   ];
 }
@@ -69,18 +83,21 @@ class GroqProvider {
       ...liveModels,
       'llama-3.3-70b-versatile',
       'llama-3.1-8b-instant',
-      'deepseek-r1-distill-llama-70b',
       'llama-3.2-3b-preview',
-      'llama-3.2-1b-preview'
+      'llama-3.2-1b-preview',
+      'deepseek-r1-distill-llama-70b'
     ].filter((m, i, arr) => m && arr.indexOf(m) === i);
 
     let lastError;
     for (const modelName of candidateModels) {
+      const isReasoningModel = modelName.includes('deepseek-r1') || modelName.includes('qwq');
+      const tokens = isReasoningModel ? Math.max(maxTokens, 450) : maxTokens;
+
       const body = {
         model: modelName,
         messages,
         temperature,
-        max_tokens: maxTokens
+        max_tokens: tokens
       };
 
       for (let attempt = 0; attempt <= config.ai.groq.maxRetries; attempt += 1) {

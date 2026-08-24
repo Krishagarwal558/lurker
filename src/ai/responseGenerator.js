@@ -39,6 +39,11 @@ async function generateChatReply(input) {
   }
 
   const firstReply = sanitizeAiOutput(raw);
+  if (!firstReply) {
+    const fallback = freshFallback(input.recentMessages || []);
+    return { content: fallback, personality, bubbles: [fallback] };
+  }
+
   if (!isTooSimilarToRecentBotReply(firstReply, input.recentMessages || [])) {
     return {
       content: firstReply,

@@ -30,6 +30,9 @@ function sanitizeAiOutput(text, maxChars = config.bot?.maxReplyLength || 280) {
   if (!text) return '';
 
   let sanitized = String(text)
+    // Strip DeepSeek / Qwen / reasoning model <think>...</think> tags and unclosed <think> blocks
+    .replace(/<think>[\s\S]*?<\/think>/gi, '')
+    .replace(/<think>[\s\S]*$/gi, '')
     // Strip assistant preambles / thoughts
     .replace(/^(as an ai|as an assistant|here is a reply|here's a response|reply:)\s*/i, '')
     .replace(/^["'“”‘’](.*)["'“”‘’]$/s, '$1')
