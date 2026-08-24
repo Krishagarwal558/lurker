@@ -5,8 +5,10 @@ const { startChatReviver } = require('../utils/reviver');
 const { startTargetGremlinWatcher } = require('../utils/targetGremlinWatcher');
 const logger = require('../utils/logger');
 
+const instanceId = Math.random().toString(36).slice(2, 7);
+
 async function execute(client) {
-  logger.success(`Logged in as ${client.user.tag} (ID: ${client.user.id})`);
+  logger.success(`Logged in as ${client.user.tag} (Instance #${instanceId})`);
 
   // Set natural gamer / member status
   client.user.setPresence({

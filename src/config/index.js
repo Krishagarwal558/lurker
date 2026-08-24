@@ -85,8 +85,8 @@ const config = {
     typingMaxMs: numberFromEnv('TYPING_MAX_MS', 4500, 500, 15000),
     typingCharsPerSecond: numberFromEnv('TYPING_CHARS_PER_SECOND', 8, 1, 80),
 
-    // Multi-bubble humanizer options
-    enableMultiBubble: boolFromEnv('ENABLE_MULTI_BUBBLE', true),
+    // Multi-bubble humanizer options (default false for single clean reply)
+    enableMultiBubble: boolFromEnv('ENABLE_MULTI_BUBBLE', false),
     multiBubbleChance: numberFromEnv('MULTI_BUBBLE_CHANCE', 0.22, 0, 1),
     burstDelayMs: numberFromEnv('BURST_DELAY_MS', 900, 200, 4000),
 
