@@ -16,6 +16,7 @@ const { calculateTypingDelay, splitIntoBubbles } = require('../utils/humanizer')
 const { safeReact, safeReply, safeSend, safeTyping, sendMultiBubble, createHotTakeActionRow } = require('../utils/discord');
 
 const processedMessages = new Set();
+const activeChannelLocks = new Set();
 
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -549,6 +550,9 @@ async function execute(message) {
     }
   }
 
+  if (activeChannelLocks.has(message.channel.id)) return;
+  activeChannelLocks.add(message.channel.id);
+
   try {
     await sendGeneratedReply({
       message,
@@ -572,6 +576,8 @@ async function execute(message) {
       });
       if (sent) cooldowns.markTalk(message.guild.id, message.channel.id, message.author.id);
     }
+  } finally {
+    activeChannelLocks.delete(message.channel.id);
   }
 }
 
