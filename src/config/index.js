@@ -1,0 +1,221 @@
+require('dotenv').config();
+
+const path = require('node:path');
+
+function numberFromEnv(name, fallback, min = -Infinity, max = Infinity) {
+  const value = Number(process.env[name]);
+  if (!Number.isFinite(value)) return fallback;
+  return Math.min(max, Math.max(min, value));
+}
+
+function boolFromEnv(name, fallback) {
+  const value = process.env[name];
+  if (value === undefined) return fallback;
+  return ['1', 'true', 'yes', 'on'].includes(String(value).toLowerCase());
+}
+
+function listFromEnv(name, fallback = []) {
+  const value = process.env[name];
+  if (!value) return fallback;
+  return value.split(',').map((item) => item.trim()).filter(Boolean);
+}
+
+const config = {
+  discord: {
+    token: process.env.DISCORD_TOKEN || '',
+    clientId: process.env.DISCORD_CLIENT_ID || '',
+    ownerId: process.env.OWNER_ID || '',
+    prefix: process.env.COMMAND_PREFIX || '!'
+  },
+
+  ai: {
+    providerOrder: listFromEnv('AI_PROVIDER_ORDER', ['groq', 'gemini', 'openai']),
+    groq: {
+      apiKey: process.env.GROQ_API_KEY || '',
+      baseUrl: process.env.GROQ_BASE_URL || 'https://api.groq.com/openai/v1',
+      model: process.env.GROQ_MODEL || 'llama-3.3-70b-versatile',
+      timeoutMs: numberFromEnv('GROQ_TIMEOUT_MS', 12000, 2000, 60000),
+      maxTokens: numberFromEnv('GROQ_MAX_TOKENS', 90, 20, 500),
+      temperature: numberFromEnv('GROQ_TEMPERATURE', 0.95, 0, 2),
+      maxRetries: numberFromEnv('GROQ_MAX_RETRIES', 2, 0, 5)
+    },
+    gemini: {
+      apiKey: process.env.GEMINI_API_KEY || '',
+      model: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
+      baseUrl: process.env.GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/v1beta'
+    },
+    openai: {
+      apiKey: process.env.OPENAI_API_KEY || '',
+      baseUrl: process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1',
+      model: process.env.OPENAI_MODEL || 'gpt-4o-mini'
+    }
+  },
+
+  // Retain legacy config.groq access for full backward-compatibility
+  get groq() {
+    return this.ai.groq;
+  },
+
+  database: {
+    path: process.env.DATABASE_PATH
+      ? path.resolve(process.cwd(), process.env.DATABASE_PATH)
+      : path.join(process.cwd(), 'data', 'bot.sqlite')
+  },
+
+  server: {
+    port: numberFromEnv('PORT', 8080, 1, 65535),
+    dashboardToken: process.env.DASHBOARD_TOKEN || ''
+  },
+
+  bot: {
+    defaultAiEnabled: boolFromEnv('AI_ENABLED', true),
+    replyChance: numberFromEnv('REPLY_CHANCE', 0.15, 0, 1),
+    keywordReplyChance: numberFromEnv('KEYWORD_REPLY_CHANCE', 0.35, 0, 1),
+    channelCooldownSeconds: numberFromEnv('CHANNEL_COOLDOWN_SECONDS', 60, 0, 3600),
+    userCooldownSeconds: numberFromEnv('USER_COOLDOWN_SECONDS', 25, 0, 3600),
+    maxContextMessages: numberFromEnv('MAX_CONTEXT_MESSAGES', 15, 1, 50),
+    reactionChance: numberFromEnv('REACTION_CHANCE', 0.05, 0, 1),
+    emojiOnlyChance: numberFromEnv('EMOJI_ONLY_CHANCE', 0.08, 0, 1),
+    imperfectionChance: numberFromEnv('IMPERFECTION_CHANCE', 0.08, 0, 1),
+    duplicateLookbackMessages: numberFromEnv('DUPLICATE_LOOKBACK_MESSAGES', 12, 3, 50),
+    duplicateSimilarityThreshold: numberFromEnv('DUPLICATE_SIMILARITY_THRESHOLD', 0.72, 0.4, 1),
+    replyTimeoutMs: numberFromEnv('REPLY_TIMEOUT_MS', 10000, 2000, 60000),
+    maxReplyLength: numberFromEnv('MAX_REPLY_LENGTH', 260, 40, 2000),
+    typingMinMs: numberFromEnv('TYPING_MIN_MS', 1800, 0, 10000),
+    typingMaxMs: numberFromEnv('TYPING_MAX_MS', 4500, 500, 15000),
+    typingCharsPerSecond: numberFromEnv('TYPING_CHARS_PER_SECOND', 8, 1, 80),
+
+    // Multi-bubble humanizer options
+    enableMultiBubble: boolFromEnv('ENABLE_MULTI_BUBBLE', true),
+    multiBubbleChance: numberFromEnv('MULTI_BUBBLE_CHANCE', 0.22, 0, 1),
+    burstDelayMs: numberFromEnv('BURST_DELAY_MS', 900, 200, 4000),
+
+    // Affinity & Lore Graph options
+    enableAffinity: boolFromEnv('ENABLE_AFFINITY', true),
+    enableLoreGraph: boolFromEnv('ENABLE_LORE_GRAPH', true),
+    enablePassiveFactMining: boolFromEnv('ENABLE_PASSIVE_FACT_MINING', true),
+    enableHotTakePolls: boolFromEnv('ENABLE_HOT_TAKE_POLLS', true),
+
+    reviverCron: process.env.REVIVER_CRON || '*/5 * * * *',
+    reviverMinMinutes: numberFromEnv('REVIVER_MIN_MINUTES', 45, 5, 1440),
+    reviverMaxMinutes: numberFromEnv('REVIVER_MAX_MINUTES', 90, 5, 1440),
+    reviverMinGapMinutes: numberFromEnv('REVIVER_MIN_GAP_MINUTES', 45, 5, 1440),
+    decisionScoreThreshold: numberFromEnv('DECISION_SCORE_THRESHOLD', 35, 0, 100),
+    activeConversationUsers: numberFromEnv('ACTIVE_CONVERSATION_USERS', 3, 2, 20),
+    fomoMessageCount: numberFromEnv('FOMO_MESSAGE_COUNT', 60, 5, 500),
+
+    enableHotTakes: boolFromEnv('ENABLE_HOT_TAKES', true),
+    hotTakeProbability: numberFromEnv('HOT_TAKE_PROBABILITY', 45, 0, 100),
+    argumentReplyChance: numberFromEnv('ARGUMENT_REPLY_CHANCE', 65, 0, 100),
+    argumentDurationMinutes: numberFromEnv('ARGUMENT_DURATION_MINUTES', 15, 1, 120),
+    minimumMessagesBetweenHotTakes: numberFromEnv('MINIMUM_MESSAGES_BETWEEN_HOT_TAKES', 35, 1, 500),
+    minimumMinutesBetweenHotTakes: numberFromEnv('MINIMUM_MINUTES_BETWEEN_HOT_TAKES', 180, 1, 10080),
+    hotTakeActiveRecentMinutes: numberFromEnv('HOT_TAKE_ACTIVE_RECENT_MINUTES', 8, 1, 60),
+    hotTakeMinimumRecentMessages: numberFromEnv('HOT_TAKE_MINIMUM_RECENT_MESSAGES', 6, 1, 50),
+    hotTakeAgreementSwitchCount: numberFromEnv('HOT_TAKE_AGREEMENT_SWITCH_COUNT', 2, 1, 10),
+
+    enableTargetGremlin: boolFromEnv('ENABLE_TARGET_GREMLIN', true),
+    enablePresenceIntent: boolFromEnv('ENABLE_PRESENCE_INTENT', false),
+    targetUserId: process.env.TARGET_USER_ID || '',
+    checkIntervalMinutes: numberFromEnv('CHECK_INTERVAL_MINUTES', 20, 1, 1440),
+    baseTriggerChance: numberFromEnv('BASE_TRIGGER_CHANCE', 0.45, 0, 1),
+    onlineTriggerChance: numberFromEnv('ONLINE_TRIGGER_CHANCE', 0.65, 0, 1),
+    recentMessageTriggerChance: numberFromEnv('RECENT_MESSAGE_TRIGGER_CHANCE', 0.90, 0, 1),
+    mentionChance: numberFromEnv('MENTION_CHANCE', 0.25, 0, 1),
+    replyChanceDuringGremlin: numberFromEnv('REPLY_CHANCE_DURING_GREMLIN', 0.70, 0, 1),
+    gremlinArgumentReplyChance: numberFromEnv('GREMLIN_ARGUMENT_REPLY_CHANCE', 0.90, 0, 1),
+    defenderReplyChance: numberFromEnv('DEFENDER_REPLY_CHANCE', 0.25, 0, 1),
+    maxDailyRoasts: numberFromEnv('MAX_DAILY_ROASTS', 10, 0, 100),
+    maxMentionsPerDay: numberFromEnv('MAX_MENTIONS_PER_DAY', 2, 0, 20),
+
+    decisionScores: {
+      keyword: 20,
+      question: 25,
+      activeConversation: 15,
+      botQuiet: 15,
+      nickname: 10,
+      fomo: 30,
+      recentBot: -30,
+      sameUser: -20,
+      lowSignal: -15,
+      hypeSignal: 15,
+      loreConnection: 20
+    },
+
+    personalityWeights: {
+      chill: 30,
+      gremlin: 20,
+      delusional_confidence: 15,
+      philosopher: 10,
+      npc: 10,
+      sarcastic_gamer: 10,
+      chaotic_bro: 5
+    },
+
+    personalityMode: process.env.PERSONALITY_MODE || 'mood',
+
+    moodSchedule: [
+      { startHour: 4, endHour: 10, personality: 'philosopher' },
+      { startHour: 10, endHour: 14, personality: 'chill' },
+      { startHour: 14, endHour: 18, personality: 'sarcastic_gamer' },
+      { startHour: 18, endHour: 22, personality: 'gremlin' },
+      { startHour: 22, endHour: 2, personality: 'delusional_confidence' },
+      { startHour: 2, endHour: 4, personality: 'sleepy_npc' }
+    ],
+
+    keywords: [
+      'valorant',
+      'minecraft',
+      'gym',
+      'college',
+      'exam',
+      'coding',
+      'food',
+      'sleep',
+      'discord',
+      'anime',
+      'movie',
+      'github',
+      'server',
+      'build',
+      'bug',
+      'coffee',
+      'pizza',
+      'clutch',
+      'rank',
+      'music'
+    ],
+
+    reactionEmojis: ['💀', '😭', '🔥', '🗿', '👀', '😂', '🤡', '🫡', '🤔', '💯'],
+    emojiOnlyReplies: ['💀', '😭', '🗿', '👀', '😂', 'fr??', 'nahhh', 'wait what', 'real', 'skill issue', 'bruh'],
+
+    reviverFallbackStarters: [
+      'important question',
+      "what's everyone's hottest take",
+      'where did the focus go',
+      "today's side quest",
+      'drop the most random thought rn',
+      'what are we pretending to understand today',
+      'tiny debate: best midnight snack?',
+      'who is winning the sleep schedule war',
+      'alright what are we cooking in chat today',
+      'quick vibe check on the server',
+      'unpopular opinion time'
+    ],
+
+    freshFallbackReplies: [
+      'real tbh',
+      'valid honestly',
+      'okay wait, plot twist',
+      'chat is entering lore mode',
+      'fair enough',
+      'that checks out somehow',
+      'i respect the chaos',
+      'bro onto something',
+      'nah no way',
+      'let them cook'
+    ]
+  }
+};
+
+module.exports = config;

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lurker v2 // Cyberpunk Mission Control</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="glow-backdrop"></div>
+
+  <header class="cyber-header">
+    <div class="header-brand">
+      <div class="status-orb" id="botStatusOrb"></div>
+      <div class="brand-text">
+        <h1 class="glitch-title" data-text="LURKER v2.0">LURKER <span class="neon-badge">v2.0</span></h1>
+        <p class="subtitle">Next-Gen Autonomous Discord Member AI</p>
+      </div>
+    </div>
+    <div class="header-metrics">
+      <div class="metric-pill">
+        <span class="metric-label">UPTIME</span>
+        <span class="metric-val" id="uptimeVal">--</span>
+      </div>
+      <div class="metric-pill">
+        <span class="metric-label">MOOD</span>
+        <span class="metric-val neon-text" id="moodVal">--</span>
+      </div>
+      <div class="metric-pill">
+        <span class="metric-label">RAM</span>
+        <span class="metric-val" id="ramVal">-- MB</span>
+      </div>
+    </div>
+  </header>
+
+  <main class="dashboard-grid">
+    <!-- Left Navigation / Guild Selector -->
+    <aside class="sidebar-panel glass-panel">
+      <div class="panel-header">
+        <h2>SERVERS</h2>
+        <span class="badge" id="guildsCount">0</span>
+      </div>
+      <div class="guild-list" id="guildList">
+        <div class="empty-state">Loading servers...</div>
+      </div>
+
+      <div class="panel-header mt-lg">
+        <h2>AI ROUTING</h2>
+      </div>
+      <div class="provider-chain" id="providerChain">
+        <div class="chain-node active">⚡ Groq (Llama 3.3)</div>
+        <div class="chain-arrow">↓</div>
+        <div class="chain-node">✨ Gemini 2.0</div>
+        <div class="chain-arrow">↓</div>
+        <div class="chain-node">🧠 OpenAI / Ollama</div>
+      </div>
+    </aside>
+
+    <!-- Center Content: Tabbed Manager -->
+    <section class="main-panel glass-panel">
+      <nav class="cyber-tabs">
+        <button class="tab-btn active" data-tab="memories">🧠 Long-Term Memory</button>
+        <button class="tab-btn" data-tab="lore">📜 Server Lore Graph</button>
+        <button class="tab-btn" data-tab="analytics">📊 Real-Time Analytics</button>
+        <button class="tab-btn" data-tab="hottakes">🔥 Hot Takes Arena</button>
+      </nav>
+
+      <!-- TAB: Memories -->
+      <div class="tab-content active" id="tab-memories">
+        <div class="section-toolbar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="memorySearch" placeholder="Search nicknames, inside jokes, topics...">
+          </div>
+          <button class="btn btn-secondary" id="refreshMemoriesBtn">↻ Refresh</button>
+        </div>
+        <div class="table-container">
+          <table class="cyber-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>TYPE</th>
+                <th>CONTENT</th>
+                <th>TARGET USER</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="memoriesTbody">
+              <tr><td colspan="5" class="empty-state">No memories stored yet.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: Lore Graph -->
+      <div class="tab-content" id="tab-lore">
+        <div class="lore-header-row">
+          <h3>Guild Lore & Inside Jokes</h3>
+          <button class="btn btn-primary" id="openAddLoreModalBtn">+ Record Lore</button>
+        </div>
+        <div class="lore-grid" id="loreGrid">
+          <div class="empty-state">No lore recorded yet. Record some using the button above or in Discord with <code>!lore add</code>!</div>
+        </div>
+      </div>
+
+      <!-- TAB: Analytics -->
+      <div class="tab-content" id="tab-analytics">
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-num neon-text" id="totalMessagesStat">0</div>
+            <div class="stat-desc">Messages Tracked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="activeUsersStat">0</div>
+            <div class="stat-desc">Active Chatters</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num" id="replyChanceStat">15%</div>
+            <div class="stat-desc">Ambient Sensitivity</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Hot Takes Arena -->
+      <div class="tab-content" id="tab-hottakes">
+        <div class="hottakes-banner">
+          <h3>🔥 450+ Curated Debate Starters</h3>
+          <p>Lurker automatically starts debates in active channels, defends its stances stubbornly, and switches sides if everyone agrees.</p>
+        </div>
+        <div class="hottakes-sample-list" id="hotTakesList"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Add Lore Modal -->
+  <div class="modal-backdrop" id="loreModal">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>Record Server Lore</h3>
+        <button class="close-btn" id="closeLoreModalBtn">&times;</button>
+      </div>
+      <form id="addLoreForm">
+        <div class="form-group">
+          <label>Title / Meme Name</label>
+          <input type="text" id="loreTitleInput" required placeholder="e.g. The 3AM Side Quest">
+        </div>
+        <div class="form-group">
+          <label>Category</label>
+          <select id="loreCategorySelect">
+            <option value="meme">Meme / Joke</option>
+            <option value="quote">Legendary Quote</option>
+            <option value="lore">Server Lore</option>
+            <option value="gaming">Gaming Clutch</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Story / Quote Details</label>
+          <textarea id="loreContentInput" rows="4" required placeholder="Explain what happened..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelLoreBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Lore Graph</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
