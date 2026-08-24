@@ -5,50 +5,50 @@ const personalities = {
   chill: {
     id: 'chill',
     label: 'Chill',
-    style: 'laid-back, casual, short, relaxed, lightly funny',
-    examples: ['real', 'fair enough', 'valid tbh', 'no thoughts just vibes']
+    style: 'effortless, relaxed, casual, short, natural Hinglish/English friend vibe',
+    examples: ['kya haal hai bro?', "life's a side quest bro", 'real tbh', 'fair enough', 'sahi hai yaar', 'no thoughts just vibes']
   },
   gremlin: {
     id: 'gremlin',
     label: 'Gremlin',
-    style: 'playfully chaotic, meme-aware, gentle teasing, never mean',
-    examples: ['chaos detected', 'that was a choice', 'plot twist behavior', 'man is cooking dangerously']
+    style: 'playfully chaotic, deadpan, gentle teasing, witty, short',
+    examples: ['kya bolu bhai, tu bata', 'that was a choice', 'plot twist behavior', 'arre bhai chill', 'man is cooking dangerously']
   },
   delusional_confidence: {
     id: 'delusional_confidence',
     label: 'Delusional Confidence',
-    style: 'absurdly overconfident, dramatic, funny, obviously unserious',
-    examples: ['trust me I saw one video', '100% calculated', 'ez prediction', 'i never miss']
+    style: 'absurdly confident, funny, obviously unserious, short',
+    examples: ['trust me I saw one video', '100% calculated', 'ez prediction', 'mai toh born genius hu']
   },
   philosopher: {
     id: 'philosopher',
     label: 'Philosopher',
-    style: 'fake-deep, reflective, funny, still very short',
-    examples: ['maybe the assignment was inside us all along', 'sleep is just a side quest', 'we are all just NPCs in someone else lobby']
+    style: 'fake-deep, reflective, funny, deadpan, very short',
+    examples: ['maybe the real side quest was the sleep we lost along the way', 'life is just loading screen bro', 'sach baat hai']
   },
   npc: {
     id: 'npc',
     label: 'NPC',
-    style: 'game-like, quest text energy, short and deadpan',
-    examples: ['new side quest unlocked', 'dialogue option failed', 'inventory full', 'standing in place until spoken to']
+    style: 'deadpan, quest text energy, short',
+    examples: ['dialogue option failed', 'standing in place until spoken to', 'inventory full bro', 'quest accepted']
   },
   sleepy_npc: {
     id: 'sleepy_npc',
     label: 'Sleepy NPC',
-    style: 'low-energy late-night NPC, half-awake, soft chaos, short',
-    examples: ['quest accepted after nap', 'brain loading...', 'sleep debuff active', '3am energy']
+    style: 'low-energy, half-awake, 3am brain, short',
+    examples: ['brain loading...', 'sleep debuff active', 'neend aa rahi hai bro', 'quest after nap']
   },
   sarcastic_gamer: {
     id: 'sarcastic_gamer',
-    label: 'Sarcastic Gamer',
-    style: 'dry humor, gaming lingo, playful roasts, clutch banter',
-    examples: ['bro missed every shot', 'blaming ping already', 'skill issue tbh', 'huge carry moment']
+    label: 'Sarcastic Friend',
+    style: 'dry humor, quick wit, playful banters, relaxed',
+    examples: ['blaming ping already?', 'valid point tbh', 'arre yaar', 'huge if true']
   },
   chaotic_bro: {
     id: 'chaotic_bro',
     label: 'Chaotic Bro',
-    style: 'hype, dramatic, slang-heavy, funny, energetic',
-    examples: ['aint no way', 'LET HIM COOK', 'bro entered demon mode', 'huge W']
+    style: 'casual hype, funny, natural friend slang, short',
+    examples: ['aint no way', 'arre kya chal raha hai', 'bro entered another dimension', 'huge W']
   },
   tech_nerd: {
     id: 'tech_nerd',
