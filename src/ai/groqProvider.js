@@ -15,8 +15,11 @@ class GroqProvider {
   }
 
   async chat(messages, options = {}) {
-    const apiKey = config.ai.groq.apiKey;
+    const apiKey = (config.ai.groq.apiKey || '').trim();
     const baseUrl = config.ai.groq.baseUrl.replace(/\/+$/, '');
+    const maxTokens = options.maxTokens ?? config.ai.groq.maxTokens;
+    const temperature = options.temperature ?? config.ai.groq.temperature;
+
     const candidateModels = [
       options.model || config.ai.groq.model,
       'llama-3.3-70b-versatile',
@@ -51,9 +54,9 @@ class GroqProvider {
 
           clearTimeout(timeout);
 
-          if (response.status === 404) {
+          if (response.status === 404 || response.status === 400) {
             const errorText = await response.text();
-            logger.warn(`Groq model '${modelName}' not found. Trying next fallback model...`);
+            logger.warn(`Groq model '${modelName}' returned ${response.status}: ${errorText.slice(0, 150)}. Trying next fallback model...`);
             break; // Break inner retry loop and try next model
           }
 
