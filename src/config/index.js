@@ -204,16 +204,27 @@ const config = {
     ],
 
     freshFallbackReplies: [
-      'real tbh',
-      'valid honestly',
-      'okay wait, plot twist',
-      'chat is entering lore mode',
-      'fair enough',
-      'that checks out somehow',
-      'i respect the chaos',
-      'bro onto something',
-      'nah no way',
-      'let them cook'
+      'bro what',
+      "nah you're cooked",
+      "wait THAT'S what you meant?",
+      'this is getting serious',
+      'anyway',
+      "it's over",
+      'interesting...',
+      'chimp behavior',
+      '😭',
+      '💀',
+      'okay wait',
+      'real',
+      'nah',
+      'damn',
+      'oh',
+      'bro',
+      'crazy',
+      "that's rough",
+      'what happened',
+      'kya bolu bhai, tu bata',
+      'arre bhai chill'
     ]
   }
 };
