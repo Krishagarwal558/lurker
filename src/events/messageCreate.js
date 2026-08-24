@@ -15,6 +15,8 @@ const { scoreConversation } = require('../utils/conversationScorer');
 const { calculateTypingDelay, splitIntoBubbles } = require('../utils/humanizer');
 const { safeReact, safeReply, safeSend, safeTyping, sendMultiBubble, createHotTakeActionRow } = require('../utils/discord');
 
+const processedMessages = new Set();
+
 function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
@@ -148,7 +150,7 @@ async function sendGeneratedReply({
   );
 
   const content = activeHotTake ? limitWords(result.content, 15) : result.content;
-  const bubbles = splitIntoBubbles(content);
+  const bubbles = config.bot.enableMultiBubble ? splitIntoBubbles(content) : [content];
 
   await sleep(calculateTypingDelay(bubbles[0]));
 
@@ -326,7 +328,14 @@ async function sendAutonomousChannelMessage({ message, content, personality, wit
 }
 
 async function execute(message) {
-  if (!message.guild || message.author.bot) return;
+  if (!message || !message.guild || message.author?.bot) return;
+
+  if (processedMessages.has(message.id)) return;
+  processedMessages.add(message.id);
+  if (processedMessages.size > 2000) {
+    const first = processedMessages.values().next().value;
+    processedMessages.delete(first);
+  }
 
   repositories.upsertGuild(message.guild);
   repositories.upsertUser(message.author, message.member);
