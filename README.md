@@ -1,9 +1,77 @@
 # 👾 Lurker v2.0 // Next-Gen Autonomous Discord Member AI
 
-> An ultra-realistic, multi-model Discord bot that behaves like a real server regular — listening to chat flow, remembering lore & inside jokes, arguing hot takes, tracking relationship affinities, and speaking without needing to be pinged.
+[![Node.js 20+](https://img.shields.io/badge/Node.js-20%2B-339933?style=flat-square&logo=node.js)](https://nodejs.org/)
+[![Discord.js v14](https://img.shields.io/badge/Discord.js-v14-5865F2?style=flat-square&logo=discord)](https://discord.js.org/)
+[![LLM Router](https://img.shields.io/badge/Inference-Multi--Model_Failover-blueviolet?style=flat-square)](#-key-features)
+[![Dashboard](https://img.shields.io/badge/Web_UI-Cyberpunk_Dashboard-f43f5e?style=flat-square)](#-cyberpunk-web-dashboard)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+
+> An ultra-realistic, multi-model Discord bot that behaves like a real server regular — listening to chat flow, remembering lore & inside jokes, arguing hot takes, tracking relationship affinities, and speaking naturally without needing to be pinged.
 
 ---
 
+### 💬 Ambient Chat Demonstration
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│  #general-chat                                                         │
+│                                                                        │
+│  [Alex]: honestly vim keybindings are overrated                        │
+│  [Sam]: depends if you know how to use macros lol                      │
+│                                                                        │
+│  [Lurker] typing...                                                    │
+│  [Lurker]: calling vim overrated in 2026 is crazy talk                 │
+│  [Lurker]: bro probably spent 10 mins stuck in :wq and gave up 💀      │
+│                                                                        │
+│  [SYSTEM] Affinity: Alex (-2: banter) | Ambient Score: 87/100 (Triggered)│
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 🏗️ System Architecture
+
+```mermaid
+graph TD
+    Discord[Discord Gateway Event Stream] --> Ambient[Ambient Conversation Scorer<br/>Keywords, Hype, Mentions, Pacing]
+    Ambient -->|Threshold Exceeded or Mentioned| Core{Lurker AI Core}
+    
+    subgraph Memory ["Context & Relationship Engine"]
+        LoreGraph[(Server Lore Graph<br/>Inside Jokes, Quotes, Events)]
+        Affinity[(Member Affinity Matrix<br/>-100 to +100 Rapport)]
+        History[(Sliding Window Chat History)]
+    end
+
+    subgraph LLM ["Multi-Provider Inference Engine (Auto-Failover)"]
+        Groq[Groq ⚡ Llama 3.3 70B]
+        Gemini[Google Gemini 2.0 / 1.5 Flash]
+        OpenAI[OpenAI GPT-4o-mini]
+        Ollama[Local Ollama / GGUF]
+    end
+
+    subgraph Delivery ["Human Mimicry & Output"]
+        Burst[Burst Delivery Engine<br/>Variable WPM Typing + Multi-Bubble Split]
+        AntiRep[Anti-Repetition Token Guard]
+    end
+
+    Core --> Memory
+    Core --> LLM
+    Groq -.->|Fallback| Gemini
+    Gemini -.->|Fallback| OpenAI
+    OpenAI -.->|Fallback| Ollama
+
+    LLM --> AntiRep
+    AntiRep --> Burst
+    Burst --> Out([Discord Message Delivery])
+    Core --> Dashboard[Cyberpunk Web Dashboard :8080<br/>Live Metrics, Lore & Memory Editor]
+
+    classDef core fill:#1e293b,stroke:#a855f7,stroke-width:2px,color:#fff;
+    classDef llm fill:#0f172a,stroke:#3b82f6,stroke-width:1px,color:#fff;
+    class Core,Ambient,Burst core;
+    class Groq,Gemini,OpenAI,Ollama llm;
+```
+
+---
 ## ⚡ What's New in Lurker v2.0?
 
 | Feature Dimension | Lurker v1 | Lurker v2.0 (Supercharged) |
